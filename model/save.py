@@ -30,7 +30,7 @@ try:
     for container in containers:
         existingContainerName = container['name']
         print(existingContainerName, container['metadata'])
-        if existingContainerName.startswith("hikeplanner-model"):
+        if existingContainerName.startswith("smartprix-model"):
             parts = existingContainerName.split("-")
             print(parts)
             if (len(parts) == 3):
@@ -39,14 +39,14 @@ try:
                     suffix = newSuffix
 
     suffix += 1
-    container_name = str("hikeplanner-model-" + str(suffix))
+    container_name = str("smartprix-model-" + str(suffix))
     print("new container name: ")
     print(container_name)
 
     for container in containers:            
         print("\t" + container['name'])
         if container_name in container['name']:
-            print("EXISTIERTT BEREITS!")
+            print("EXISTIERT BEREITS!")
             exists = True
 
     if not exists:

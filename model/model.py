@@ -139,28 +139,28 @@ df['OS_Android'] = df['os'].str.contains('Android', case=False, na=False)
 df = df.drop(['model', 'sim', 'processor', 'ram', 'battery', 'display', 'camera', 'card', 'os'], axis=1)
 
 # Teile den Datensatz in Features und Target
-X = df.drop('price', axis=1)
+x = df.drop('price', axis=1)
 y = df['price']
 
 # Teile die Daten in Trainings- und Testsets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=42)
 
 # Imputer erstellen, der NaN-Werte durch den Median der jeweiligen Spalte ersetzt
 imputer = SimpleImputer(strategy='median')
 
 # Imputer auf die Trainingsdaten anwenden
-X_train_imputed = imputer.fit_transform(X_train)
-X_test_imputed = imputer.transform(X_test)
+x_train_imputed = imputer.fit_transform(x_train)
+x_test_imputed = imputer.transform(x_test)
 
 # Lineare Regression
 lr = LinearRegression()
-lr.fit(X_train_imputed, y_train)
-y_pred_lr = lr.predict(X_test_imputed)
+lr.fit(x_train_imputed, y_train)
+y_pred_lr = lr.predict(x_test_imputed)
 
 # Gradient Boosting Regressor
-gbr = GradientBoostingRegressor(random_state=42)
-gbr.fit(X_train_imputed, y_train)
-y_pred_gbr = gbr.predict(X_test_imputed)
+gbr = GradientBoostingRegressor(n_estimators=50, random_state=9000)
+gbr.fit(x_train_imputed, y_train)
+y_pred_gbr = gbr.predict(x_test_imputed)
 
 # Berechne Metriken
 r2_lr = r2_score(y_test, y_pred_lr)
@@ -177,26 +177,38 @@ results_LR_GBR = pd.DataFrame({
 
 print(results_LR_GBR)
 
-'''
-# Wir erstellen eine Korrelationsmatrix nur für den 'price'
-price_corr = df.corrwith(df['price']).iloc[:-1].to_frame()
-price_corr.columns = ['Correlation with Price']
 
-# Sortiere die Korrelationen für eine bessere Visualisierung
-price_corr = price_corr.sort_values(by='Correlation with Price', ascending=False)
+# Liste der Variablen, die in der Korrelationsmatrix erscheinen sollen
+variables = ['Dual Sim', 'Has 5G', 'GHz', 'RAM_GB', 'Battery_mAh', 'Display_60Hz', 'Display_120Hz', 'OS_Android', 'price']
 
-# Erstelle die Heatmap
+# Erstelle eine neue DataFrame-Instanz mit nur den gewünschten Spalten für die Korrelationsmatrix
+df_for_corr = df[variables]
+
+# Imputer erstellen und anwenden, falls noch NaN-Werte vorhanden sind
+imputer = SimpleImputer(strategy='mean')
+df_imputed = imputer.fit_transform(df_for_corr)
+df_imputed = pd.DataFrame(df_imputed, columns=variables)
+
+# Berechne die Korrelationsmatrix für die ausgewählten Variablen
+corr_matrix = df_imputed.corr()
+
+# Erstelle eine Heatmap für die Korrelationsmatrix
 plt.figure(figsize=(10, 8))
-sns.heatmap(price_corr, annot=True, fmt=".2f", cmap="coolwarm", vmin=-1, vmax=1, cbar_kws={"shrink": .82})
-
-# Titel für die Heatmap
-plt.title('Feature Correlation with Price')
-
-# Zeige die Heatmap an
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', cbar=True, fmt='.2f')
+plt.title('Korrelationsmatrix für ausgewählte Variablen')
 plt.show()
-'''
 
 
+# Save To Disk
+import pickle
+
+# save the classifier
+with open('GradientBoostingRegressor.pkl', 'wb') as fid:
+    pickle.dump(gbr, fid)    
+
+# load it again
+with open('GradientBoostingRegressor.pkl', 'rb') as fid:
+    gbr_loaded = pickle.load(fid)
 
 
 
