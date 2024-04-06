@@ -139,7 +139,7 @@ df['OS_Android'] = df['os'].str.contains('Android', case=False, na=False)
 df = df.drop(['model', 'sim', 'processor', 'ram', 'battery', 'display', 'camera', 'card', 'os'], axis=1)
 
 # Teile den Datensatz in Features und Target
-x = df.drop('price', axis=1)
+x = df[['Dual_Sim', 'Has_5G', 'GHz', 'RAM_GB', 'Battery_mAh', 'Display_60Hz', 'Display_120Hz', 'OS_Android']]
 y = df['price']
 
 # Teile die Daten in Trainings- und Testsets
@@ -179,18 +179,18 @@ print(results_LR_GBR)
 
 
 # Liste der Variablen, die in der Korrelationsmatrix erscheinen sollen
-variables = ['Dual_Sim', 'Has_5G', 'GHz', 'RAM_GB', 'Battery_mAh', 'Display_60Hz', 'Display_120Hz', 'OS_Android', 'price']
+#variables = [['Dual_Sim', 'Has_5G', 'GHz', 'RAM_GB', 'Battery_mAh', 'Display_60Hz', 'Display_120Hz', 'OS_Android', 'price']]
 
 # Erstelle eine neue DataFrame-Instanz mit nur den gewünschten Spalten für die Korrelationsmatrix
-df_for_corr = df[variables]
+#df_for_corr = df.corr()
 
 # Imputer erstellen und anwenden, falls noch NaN-Werte vorhanden sind
-imputer = SimpleImputer(strategy='mean')
-df_imputed = imputer.fit_transform(df_for_corr)
-df_imputed = pd.DataFrame(df_imputed, columns=variables)
+#imputer = SimpleImputer(strategy='mean')
+#df_imputed = imputer.fit_transform(df_for_corr)
+#df_imputed = pd.DataFrame(df_imputed, columns=variables)
 
 # Berechne die Korrelationsmatrix für die ausgewählten Variablen
-corr_matrix = df_imputed.corr()
+corr_matrix = df.corr()
 
 # Erstelle eine Heatmap für die Korrelationsmatrix
 plt.figure(figsize=(10, 8))
@@ -201,16 +201,24 @@ plt.show()
 df.to_json('/Users/morenogallo/Desktop/ZHAW/6_Semester/MDM/MDM_Projekt1_Moreno_Gallo/model/newPhoneDF.json', orient='records', lines=True )
 
 # DEMO
-Dual_Sim = True
-Has_5G = True
+Dual_Sim = False
+Has_5G = False
 GHz = 100.0
 RAM_GB = 8.0
-Battery_mAh = 5000.0
+Battery_mAh = 1000.0
 Display_60Hz = False
-Display_120Hz = True
+Display_120Hz = False
 OS_Android = True
 
 
+
+
+demo_input = [[Dual_Sim, Has_5G, GHz, RAM_GB, Battery_mAh, Display_60Hz, Display_120Hz, OS_Android]]
+demo_df = pd.DataFrame(columns=['Dual_Sim', 'Has_5G', 'GHz', 'RAM_GB', 'Battery_mAh', 'Display_60Hz', 'Display_120Hz', 'OS_Android'], data=demo_input)
+demo_output = gbr.predict(demo_df)
+predictedPrice = demo_output[0]
+
+print("Predicted Price: ",predictedPrice)
 
 
 # Save To Disk

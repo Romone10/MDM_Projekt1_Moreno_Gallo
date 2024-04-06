@@ -63,13 +63,7 @@ RAM_GB = 8.0
 GHz = 2.8
 Has_5G = True
 Dual_Sim = True
-demoinput = [[OS_Android,Display_60Hz,Display_120Hz,Battery_mAh,RAM_GB,GHz,Has_5G,Dual_Sim]]
-demodf = pd.DataFrame(columns=[])
 
-demoinput = [[OS_Android, Display_60Hz, Display_120Hz, Battery_mAh, RAM_GB, GHz, Has_5G, Dual_Sim,0]]
-demodf = pd.DataFrame(columns=['OS_Android', 'Display_60Hz', 'Display_120Hz', 'Battery_mAh', 'RAM_GB', 'GHz', 'Has_5G', 'Dual_Sim', 'price'], data=demoinput)
-demooutput = model.predict(demodf)
-predicted_price = demooutput[0]
 
 
 
@@ -93,7 +87,7 @@ def predict():
     GHz = data['GHz']     
     Has_5G = data['Has_5G']     
     Dual_Sim = data['Dual_Sim']          
-    input_data = [[OS_Android, Display_60Hz, Display_120Hz, Battery_mAh, RAM_GB, GHz, Has_5G, Dual_Sim]]     
+    input_data = [[OS_Android, Display_60Hz, Display_120Hz, Battery_mAh, RAM_GB, GHz, Has_5G, Dual_Sim]]
     prediction = model.predict(input_data)[0]     
     
     return jsonify({'price': str(prediction)}) 

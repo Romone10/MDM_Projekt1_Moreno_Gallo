@@ -92,7 +92,7 @@
 
     <button id="predictBtn">Preisprognose anschauen</button>
 
-    <p id="prediction">Preis für ein Smartphone mit den angegebenen Spezifikationen: <span id="predicted_price"></span>n.a.</p>
+    <p id="prediction">Preis für ein Smartphone mit den angegebenen Spezifikationen: <span id="predicted_price">n.a.</span></p>
 
     <script>
         __sveltekit_1jpd85b = {
@@ -108,6 +108,7 @@
             let GHz = document.getElementById('GHz').value;
             let Has_5G = document.getElementById('Has_5G').checked;
             let Dual_Sim = document.getElementById('Dual_Sim').checked;
+            let predicted_price = 0;
 
 			
 
@@ -126,26 +127,17 @@
                     RAM_GB,
                     GHz,
                     Has_5G,
-                    Dual_Sim,
-                    price
+                    Dual_Sim
                 })
             });
 
 			const data = await response.json();
 
             // Setze eine simulierte Vorhersageantwort
-            document.getElementById('predicted_price').innerText = data.predicted_price;
+            document.getElementById('predicted_price').innerText = data.price;
         });
 
-        // Synchronisiere den Slider und das Nummernfeld
-        const priceInput = document.getElementById('price');
-        const priceNumInput = document.getElementById('priceNum');
-        priceInput.addEventListener('input', () => {
-            priceNumInput.value = priceInput.value;
-        });
-        priceNumInput.addEventListener('input', () => {
-            priceInput.value = priceNumInput.value;
-        });
+        
     </script>
 </body>
 </html>
