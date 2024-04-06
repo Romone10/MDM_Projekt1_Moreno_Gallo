@@ -83,24 +83,19 @@ def indexPage():
      return send_file("../frontend/build/index.html")  
 
 @app.route("/api/predict", methods=['POST'])
-def hello_world():
-    OS_Android = request.args.get('OS_Android', default = 0, type = int)
-    Display_60Hz = request.args.get('Display_60Hz', default = 0, type = int)
-    Display_120Hz = request.args.get('Display_120Hz', default = 0, type = int)
-    Battery_mAh = request.args.get('Battery_mAh', default = 0, type = int)
-    RAM_GB = request.args.get('RAM_GB', default = 0, type = int)
-    GHz = request.args.get('GHz', default = 0, type = int)
-    Has_5G = request.args.get('Has_5G', default = 0, type = int)
-    Dual_Sim = request.args.get('Dual_Sim', default = 0, type = int)
-
-
+def predict():     
+    data = request.json     
+    OS_Android = data['OS_Android']     
+    Display_60Hz = data['Display_60Hz']     
+    Display_120Hz = data['Display_120Hz']     
+    Battery_mAh = data['Battery_mAh']     
+    RAM_GB = data['RAM_GB']     
+    GHz = data['GHz']     
+    Has_5G = data['Has_5G']     
+    Dual_Sim = data['Dual_Sim']          
+    input_data = [[OS_Android, Display_60Hz, Display_120Hz, Battery_mAh, RAM_GB, GHz, Has_5G, Dual_Sim]]     
+    prediction = model.predict(input_data)[0]     
     
-    demoinput = [[OS_Android, Display_60Hz, Display_120Hz, Battery_mAh, RAM_GB, GHz, Has_5G, Dual_Sim]]
-    demodf = pd.DataFrame(columns=['OS_Android', 'Display_60Hz', 'Display_120Hz', 'Battery_mAh', 'RAM_GB', 'GHz', 'Has_5G', 'Dual_Sim'], data=demoinput)
-    demooutput = model.predict(demodf)
-    predicted_price = demooutput[0]
-    
-    
-
-    return jsonify({'price': str(predicted_price)
-        })
+    return jsonify({'price': str(prediction)}) 
+if __name__ == "__main__":     
+    app.run(debug=True)

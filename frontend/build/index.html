@@ -95,6 +95,9 @@
     <p id="prediction">Preis für ein Smartphone mit den angegebenen Spezifikationen: <span id="predicted_price"></span>n.a.</p>
 
     <script>
+        __sveltekit_1jpd85b = {
+            base: new URL(".", location).pathname.slice(0, -1)
+        };
         document.getElementById('predictBtn').addEventListener('click', async () => {
             // Sammle die Werte von den Eingabeelementen
             let OS_Android = document.getElementById('OS_Android').checked;
@@ -109,17 +112,24 @@
 			
 
             // Hier würdest du deinen Fetch-Request einfügen
-            const response = await fetch(`${url}/api/predict?` + new URLSearchParams({
-				OS_Android,
-				Display_60Hz,
-				Display_120Hz,
-				Battery_mAh,
-				RAM_GB,
-				GHz,
-				Has_5G,
-				Dual_Sim,
-				// price, // Sollte entfernt werden, falls es nicht als Parameter gedacht ist
-			}), { method: "GET" });
+
+            const response = await fetch(`/api/predict`,{
+                method:"POST",
+                headers: {
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                    OS_Android,
+                    Display_60Hz,
+                    Display_120Hz,
+                    Battery_mAh,
+                    RAM_GB,
+                    GHz,
+                    Has_5G,
+                    Dual_Sim,
+                    price
+                })
+            });
 
 			const data = await response.json();
 

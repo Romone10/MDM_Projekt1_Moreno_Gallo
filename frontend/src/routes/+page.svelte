@@ -1,7 +1,5 @@
 <script>
-    
     let url = location.protocol + "//" + location.host;
-
 
     let OS_Android = 0;
     let Display_60Hz = 0;
@@ -12,36 +10,29 @@
     let Has_5G = 0;
     let Dual_Sim = 0;
 
-    let predictedPrice = predicted_price;
-
-
+    let predictedPrice = 0;
 
     async function predict() {
-        let result = await fetch(
-            url +
-                "/api/predict?" +
-                new URLSearchParams({
-                    OS_Android: OS_Android,
-                    Display_60Hz: Display_60Hz,
-                    Display_120Hz: Display_120Hz,
-                    Battery_mAh: Battery_mAh,
-                    RAM_GB: RAM_GB,
-                    GHz: GHz,
-                    Has_5G: Has_5G,
-                    Dual_Sim: Dual_Sim,
-                }),
-            {
-                method: "GET",
-            },
-        );
-        let data = await result.json();
-        console.log(data);
-        predictedPrice = data.predicted_price;
+        const response = await fetch("/api/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                OS_Android,
+                Display_60Hz,
+                Display_120Hz,
+                Battery_mAh,
+                RAM_GB,
+                GHz,
+                Has_5G,
+                Dual_Sim,
+            }),
+        });
+        const data = await response.json();
+        predictedPrice = data.price;
     }
 </script>
 
 <h1>Smartphone Analyse</h1>
-
 
 <p>
     <strong>Betriebssystem von Android gewünscht? [m]</strong>
@@ -116,7 +107,8 @@
 </p>
 
 <p>
-    <strong>Oft auf Reisen? Ein Smartphone mit Dual Sim kann helfen. [m]</strong>
+    <strong>Oft auf Reisen? Ein Smartphone mit Dual Sim kann helfen. [m]</strong
+    >
     <label>
         <input type="checkbox" bind:checked={Dual_Sim} />
     </label>
@@ -134,5 +126,6 @@
 
 <button on:click={predict}>Preisprognose</button>
 
-<p>Preis für ein Smartphone mit den angegebenen Spezifikationen: {predictedPrice}</p>
-
+<p>
+    Preis für ein Smartphone mit den angegebenen Spezifikationen: {predictedPrice}
+</p>
