@@ -92,19 +92,19 @@
 
     <button id="predictBtn">Preisprognose anschauen</button>
 
-    <p id="prediction">Preis für ein Smartphone mit den angegebenen Spezifikationen: n.a.</p>
+    <p id="prediction">Preis für ein Smartphone mit den angegebenen Spezifikationen: <span id="predicted_price"></span>n.a.</p>
 
     <script>
         document.getElementById('predictBtn').addEventListener('click', async () => {
             // Sammle die Werte von den Eingabeelementen
-            const OS_Android = document.getElementById('OS_Android').checked;
-            const Display_60Hz = document.getElementById('Display_60Hz').checked;
-            const Display_120Hz = document.getElementById('Display_120Hz').checked;
-            const Battery_mAh = document.getElementById('Battery_mAh').value;
-            const RAM_GB = document.getElementById('RAM_GB').value;
-            const GHz = document.getElementById('GHz').value;
-            const Has_5G = document.getElementById('Has_5G').checked;
-            const Dual_Sim = document.getElementById('Dual_Sim').checked;
+            let OS_Android = document.getElementById('OS_Android').checked;
+            let Display_60Hz = document.getElementById('Display_60Hz').checked;
+            let Display_120Hz = document.getElementById('Display_120Hz').checked;
+            let Battery_mAh = document.getElementById('Battery_mAh').value;
+            let RAM_GB = document.getElementById('RAM_GB').value;
+            let GHz = document.getElementById('GHz').value;
+            let Has_5G = document.getElementById('Has_5G').checked;
+            let Dual_Sim = document.getElementById('Dual_Sim').checked;
 
 			
 
@@ -124,7 +124,7 @@
 			const data = await response.json();
 
             // Setze eine simulierte Vorhersageantwort
-            document.getElementById('prediction').textContent = `Preis für ein Smartphone mit den angegebenen Spezifikationen: ${data.predicted_price}`;
+            document.getElementById('predicted_price').innerText = data.predicted_price;
         });
 
         // Synchronisiere den Slider und das Nummernfeld
