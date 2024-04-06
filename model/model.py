@@ -1,6 +1,6 @@
 # new terminal
 # cd model
-# python model.py -u 'MONGO_DB_CONNECTION_STRING'
+# python model.py -u 'mongodb+srv://mongodb:HelloWorld2929@mdm-cluster-1.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
 
 import argparse
 
@@ -55,15 +55,15 @@ min_price = df['price'].idxmin()
 
 
 # 5G UND NFC ANALYSE
-df['Has 5G'] = df['sim'].str.contains('5G|5g', case=False, na=False)
+df['Has_5G'] = df['sim'].str.contains('5G|5g', case=False, na=False)
 df['Has NFC'] = False
 
 for column in df.columns:
     df['Has NFC'] = df['Has NFC'] | df[column].astype(str).str.contains('NFC', case=False, na=False)
 
-_5g_count = df['Has 5G'].sum()
+_5g_count = df['Has_5G'].sum()
 nfc_count = df['Has NFC'].sum()
-both_count = df[(df['Has NFC']) & (df['Has 5G'])].shape[0]
+both_count = df[(df['Has NFC']) & (df['Has_5G'])].shape[0]
 
 results_df = pd.DataFrame({
     'Feature': ['5G', 'NFC', 'Both NFC and 5G'],
@@ -116,8 +116,8 @@ fig.show()
 
 
 # Dual Sim und 5G Unterstützung als binäre Spalten
-df['Dual Sim'] = df['sim'].str.contains('Dual Sim', case=False, na=False)
-df['Has 5G'] = df['sim'].str.contains('5G', case=False, na=False)
+df['Dual_Sim'] = df['sim'].str.contains('Dual', case=False, na=False)
+df['Has_5G'] = df['sim'].str.contains('5G', case=False, na=False)
 
 # GHz aus der Prozessor-Spalte extrahieren
 df['GHz'] = df['processor'].str.extract(r'(2.8|2.2|2.4|1.77|100|208)').astype(float)
@@ -129,7 +129,7 @@ df['RAM_GB'] = df['ram'].str.extract(r'(8|16|32|64|128)').astype(float)
 df['Battery_mAh'] = df['battery'].str.extract(r'(5000|5100|2800|4000|4500|2500|1000|1100|1200)').astype(float)
 
 # Display-Rate extrahieren und binär machen
-df['Display_60Hz'] = df['display'].str.contains('60 Hz', case=False, na=False)
+df['Display_60Hz'] = df['display'].str.contains('60', case=False, na=False)
 df['Display_120Hz'] = df['display'].str.contains('120 Hz', case=False, na=False)
 
 # Betriebssystem als binär nach 'Android' extrahieren
@@ -179,7 +179,7 @@ print(results_LR_GBR)
 
 
 # Liste der Variablen, die in der Korrelationsmatrix erscheinen sollen
-variables = ['Dual Sim', 'Has 5G', 'GHz', 'RAM_GB', 'Battery_mAh', 'Display_60Hz', 'Display_120Hz', 'OS_Android', 'price']
+variables = ['Dual_Sim', 'Has_5G', 'GHz', 'RAM_GB', 'Battery_mAh', 'Display_60Hz', 'Display_120Hz', 'OS_Android', 'price']
 
 # Erstelle eine neue DataFrame-Instanz mit nur den gewünschten Spalten für die Korrelationsmatrix
 df_for_corr = df[variables]
@@ -195,8 +195,22 @@ corr_matrix = df_imputed.corr()
 # Erstelle eine Heatmap für die Korrelationsmatrix
 plt.figure(figsize=(10, 8))
 sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', cbar=True, fmt='.2f')
-plt.title('Korrelationsmatrix für ausgewählte Variablen')
+plt.title('Korrelationsmatrix')
 plt.show()
+
+df.to_json('/Users/morenogallo/Desktop/ZHAW/6_Semester/MDM/MDM_Projekt1_Moreno_Gallo/model/newPhoneDF.json', orient='records', lines=True )
+
+# DEMO
+Dual_Sim = True
+Has_5G = True
+GHz = 100.0
+RAM_GB = 8.0
+Battery_mAh = 5000.0
+Display_60Hz = False
+Display_120Hz = True
+OS_Android = True
+
+
 
 
 # Save To Disk
@@ -209,7 +223,6 @@ with open('GradientBoostingRegressor.pkl', 'wb') as fid:
 # load it again
 with open('GradientBoostingRegressor.pkl', 'rb') as fid:
     gbr_loaded = pickle.load(fid)
-
 
 
 

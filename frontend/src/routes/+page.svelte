@@ -1,32 +1,34 @@
 <script>
-    import { dev } from "$app/environment";
+    
     let url = location.protocol + "//" + location.host;
-    if (dev) {
-        url = "http://localhost:5000";
-    }
 
-    let count = 0;
 
-    function increment() {
-        count++;
-    }
+    let OS_Android = 0;
+    let Display_60Hz = 0;
+    let Display_120Hz = 0;
+    let Battery_mAh = 0;
+    let RAM_GB = 0;
+    let GHz = 0;
+    let Has_5G = 0;
+    let Dual_Sim = 0;
 
-    let downhill = 0;
-    let uphill = 0;
-    let length = 0;
+    let predictedPrice = predicted_price;
 
-    let prediction = "n.a.";
-    let din33466 = "n.a.";
-    let sac = "n.a.";
+
 
     async function predict() {
         let result = await fetch(
             url +
                 "/api/predict?" +
                 new URLSearchParams({
-                    downhill: downhill,
-                    uphill: uphill,
-                    length: length,
+                    OS_Android: OS_Android,
+                    Display_60Hz: Display_60Hz,
+                    Display_120Hz: Display_120Hz,
+                    Battery_mAh: Battery_mAh,
+                    RAM_GB: RAM_GB,
+                    GHz: GHz,
+                    Has_5G: Has_5G,
+                    Dual_Sim: Dual_Sim,
                 }),
             {
                 method: "GET",
@@ -34,57 +36,103 @@
         );
         let data = await result.json();
         console.log(data);
-        prediction = data.time;
-        din33466 = data.din33466;
-        sac = data.sac;
+        predictedPrice = data.predicted_price;
     }
 </script>
 
-<h1>HikePlanner</h1>
-<p>
-    Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
-</p>
+<h1>Smartphone Analyse</h1>
 
-<button on:click={increment}>
-    Clicked {count}
-    {count === 1 ? "time" : "times"}
-</button>
 
 <p>
-    <strong>Abwärts [m]</strong>
+    <strong>Betriebssystem von Android gewünscht? [m]</strong>
     <label>
-        <input type="number" bind:value={downhill} min="0" max="10000" />
-        <input type="range" bind:value={downhill} min="0" max="10000" />
+        <input type="checkbox" bind:checked={OS_Android} />
     </label>
 </p>
 
 <p>
-    <strong>Aufwärts [m]</strong>
+    <strong>60Hz Display gewünscht? [m]</strong>
     <label>
-        <input type="number" bind:value={uphill} min="0" max="10000" />
-        <input type="range" bind:value={uphill} min="0" max="10000" />
+        <input type="checkbox" bind:checked={Display_60Hz} />
     </label>
 </p>
 
 <p>
-    <strong>Distanz [m]</strong>
+    <strong>Oder doch lieber 120Hz für den nächsten Serienmarathon? [m]</strong>
     <label>
-        <input type="number" bind:value={length} min="0" max="30000" />
-        <input type="range" bind:value={length} min="0" max="30000" />
+        <input type="checkbox" bind:checked={Display_120Hz} />
     </label>
 </p>
 
-<button on:click={predict}>Predict</button>
+<p>
+    <strong>Batterie [m]</strong>
+    <label>
+        <select bind:value={Battery_mAh}>
+            <option value="1000">1000</option>
+            <option value="1100">1100</option>
+            <option value="1200">1200</option>
+            <option value="2500">2500</option>
+            <option value="2800">2800</option>
+            <option value="4000">4000</option>
+            <option value="4500">4500</option>
+            <option value="5000">5000</option>
+            <option value="5100">5100</option>
+        </select>
+    </label>
+</p>
 
-<p></p>
-<table>
-    <tr>
-        <td>Dauer:</td><td>{prediction}</td>
-    </tr>
-    <tr>
-        <td>DIN33466:</td><td>{din33466}</td>
-    </tr>
-    <tr>
-        <td>SAC:</td><td>{sac}</td>
-    </tr>
-</table>
+<p>
+    <strong>RAM [m]</strong>
+    <label>
+        <select bind:value={RAM_GB}>
+            <option value="8">8</option>
+            <option value="16">16</option>
+            <option value="32">32</option>
+            <option value="64">64</option>
+            <option value="128">128</option>
+        </select>
+    </label>
+</p>
+
+<p>
+    <strong>GHz [m]</strong>
+    <label>
+        <select bind:value={GHz}>
+            <option value="1.77">1.77</option>
+            <option value="2.2">2.2</option>
+            <option value="2.4">2.4</option>
+            <option value="2.8">2.8</option>
+            <option value="100">100</option>
+            <option value="208">208</option>
+        </select>
+    </label>
+</p>
+
+<p>
+    <strong>5G für schnelleres Internet gewünscht? [m]</strong>
+    <label>
+        <input type="checkbox" bind:checked={Has_5G} />
+    </label>
+</p>
+
+<p>
+    <strong>Oft auf Reisen? Ein Smartphone mit Dual Sim kann helfen. [m]</strong>
+    <label>
+        <input type="checkbox" bind:checked={Dual_Sim} />
+    </label>
+</p>
+
+<!-- 
+<p>
+    <strong>Was schätzt du, wie viel ein Smartphone mit den von dir gewählten Spezifikationen kostet? [m]</strong>
+    <label>
+        <input type="range" bind:value={price} min="0" max="3000" />
+        <input type="number" bind:value={price} min="0" max="3000" />
+    </label>
+</p>
+-->
+
+<button on:click={predict}>Preisprognose</button>
+
+<p>Preis für ein Smartphone mit den angegebenen Spezifikationen: {predictedPrice}</p>
+

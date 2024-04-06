@@ -1,5 +1,5 @@
 # cd model
-# python save.py -c '***AZURE_STORAGE_CONNECTION_STRING***'
+# python save.py -c "DefaultEndpointsProtocol=https;AccountName=gallomor;AccountKey=PU+pUgePeftiCA7K5TN/6aUAbCWIOmKGeM9AMyuQMwLxR/a4uEXXGG1k/3MpsKiesS6oPzMoBdvV+ASt7cmfig==;EndpointSuffix=core.windows.net"
 
 import os, uuid
 from azure.identity import DefaultAzureCredential

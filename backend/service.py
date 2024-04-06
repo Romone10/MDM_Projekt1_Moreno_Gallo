@@ -1,4 +1,7 @@
-# python -m flask --debug --app service run (works also in PowerShell)
+# cd backend
+# export AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=gallomor;AccountKey=PU+pUgePeftiCA7K5TN/6aUAbCWIOmKGeM9AMyuQMwLxR/a4uEXXGG1k/3MpsKiesS6oPzMoBdvV+ASt7cmfig==;EndpointSuffix=core.windows.net"
+
+# python -m flask --debug --app service run
 
 import datetime
 import os
@@ -52,34 +55,23 @@ file_path = Path(".", "../model/", "GradientBoostingRegressor.pkl")
 with open(file_path, 'rb') as fid:
     model = pickle.load(fid)
 
-print("*** Sample calculation with model ***")
-def din33466(uphill, downhill, distance):
-    km = distance / 1000.0
-    print(km)
-    vertical = downhill / 500.0 + uphill / 300.0
-    print(vertical)
-    horizontal = km / 4.0
-    print(horizontal)
-    return 3600.0 * (min(vertical, horizontal) / 2 + max(vertical, horizontal))
+OS_Android = True
+Display_60Hz = False
+Display_120Hz = True
+Battery_mAh = 5000
+RAM_GB = 8.0
+GHz = 2.8
+Has_5G = True
+Dual_Sim = True
+demoinput = [[OS_Android,Display_60Hz,Display_120Hz,Battery_mAh,RAM_GB,GHz,Has_5G,Dual_Sim]]
+demodf = pd.DataFrame(columns=[])
 
-def sac(uphill, downhill, distance):
-    km = distance / 1000.0
-    return 3600.0 * (uphill/400.0 + km /4.0)
-
-downhill = 300
-uphill = 700
-length = 10000
-max_elevation = 1200
-print("Downhill: " + str(downhill))
-print("Uphill: " + str(uphill))
-print("Length: " + str(length))
-demoinput = [[downhill,uphill,length,max_elevation]]
-demodf = pd.DataFrame(columns=['downhill', 'uphill', 'length_3d', 'max_elevation'], data=demoinput)
+demoinput = [[OS_Android, Display_60Hz, Display_120Hz, Battery_mAh, RAM_GB, GHz, Has_5G, Dual_Sim,0]]
+demodf = pd.DataFrame(columns=['OS_Android', 'Display_60Hz', 'Display_120Hz', 'Battery_mAh', 'RAM_GB', 'GHz', 'Has_5G', 'Dual_Sim', 'price'], data=demoinput)
 demooutput = model.predict(demodf)
-time = demooutput[0]
-print("Our Model: " + str(datetime.timedelta(seconds=time)))
-print("DIN33466: " + str(datetime.timedelta(seconds=din33466(uphill=uphill, downhill=downhill, distance=length))))
-print("SAC: " + str(datetime.timedelta(seconds=sac(uphill=uphill, downhill=downhill, distance=length))))
+predicted_price = demooutput[0]
+
+
 
 print("*** Init Flask App ***")
 app = Flask(__name__)
@@ -90,19 +82,25 @@ app = Flask(__name__, static_url_path='/', static_folder='../frontend/build')
 def indexPage():
      return send_file("../frontend/build/index.html")  
 
-@app.route("/api/predict")
+@app.route("/api/predict", methods=['POST'])
 def hello_world():
-    downhill = request.args.get('downhill', default = 0, type = int)
-    uphill = request.args.get('uphill', default = 0, type = int)
-    length = request.args.get('length', default = 0, type = int)
+    OS_Android = request.args.get('OS_Android', default = 0, type = int)
+    Display_60Hz = request.args.get('Display_60Hz', default = 0, type = int)
+    Display_120Hz = request.args.get('Display_120Hz', default = 0, type = int)
+    Battery_mAh = request.args.get('Battery_mAh', default = 0, type = int)
+    RAM_GB = request.args.get('RAM_GB', default = 0, type = int)
+    GHz = request.args.get('GHz', default = 0, type = int)
+    Has_5G = request.args.get('Has_5G', default = 0, type = int)
+    Dual_Sim = request.args.get('Dual_Sim', default = 0, type = int)
 
-    demoinput = [[downhill,uphill,length,0]]
-    demodf = pd.DataFrame(columns=['downhill', 'uphill', 'length_3d', 'max_elevation'], data=demoinput)
+
+    
+    demoinput = [[OS_Android, Display_60Hz, Display_120Hz, Battery_mAh, RAM_GB, GHz, Has_5G, Dual_Sim]]
+    demodf = pd.DataFrame(columns=['OS_Android', 'Display_60Hz', 'Display_120Hz', 'Battery_mAh', 'RAM_GB', 'GHz', 'Has_5G', 'Dual_Sim'], data=demoinput)
     demooutput = model.predict(demodf)
-    time = demooutput[0]
+    predicted_price = demooutput[0]
+    
+    
 
-    return jsonify({
-        'time': str(datetime.timedelta(seconds=time)),
-        'din33466': str(datetime.timedelta(seconds=din33466(uphill=uphill, downhill=downhill, distance=length))),
-        'sac': str(datetime.timedelta(seconds=sac(uphill=uphill, downhill=downhill, distance=length)))
+    return jsonify({'price': str(predicted_price)
         })

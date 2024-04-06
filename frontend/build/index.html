@@ -1,44 +1,141 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="./favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		
-		<link rel="modulepreload" href="./_app/immutable/entry/start.MhuHwd1o.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/entry.wUeTfkRq.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.zMJaRgub.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.LdwEzxIk.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/index.aVnu3b9f.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/0.IU5AeOT3.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/2.EpqYNhCB.js">
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">  <h1 data-svelte-h="svelte-e3ww2p">HikePlanner</h1> <p data-svelte-h="svelte-a64301">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p> <button>Clicked 0 times</button> <p><strong data-svelte-h="svelte-4z8nqm">Abwärts [m]</strong> <label><input type="number" min="0" max="10000" value="0"> <input type="range" min="0" max="10000" value="0"></label></p> <p><strong data-svelte-h="svelte-12bkxll">Aufwärts [m]</strong> <label><input type="number" min="0" max="10000" value="0"> <input type="range" min="0" max="10000" value="0"></label></p> <p><strong data-svelte-h="svelte-gkflnq">Distanz [m]</strong> <label><input type="number" min="0" max="30000" value="0"> <input type="range" min="0" max="30000" value="0"></label></p> <button data-svelte-h="svelte-7qel70">Predict</button> <p></p> <table><tr><td data-svelte-h="svelte-1qjxbrr">Dauer:</td><td>n.a.</td></tr> <tr><td data-svelte-h="svelte-cb1clj">DIN33466:</td><td>n.a.</td></tr> <tr><td data-svelte-h="svelte-orpm3r">SAC:</td><td>n.a.</td></tr></table> 
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smartphone Analyse</title>
+</head>
+<body>
+    <h1>Smartphone Analyse</h1>
+
+    <p>
+        <strong>Betriebssystem von Android gewünscht?</strong>
+        <label>
+            <input type="checkbox" id="OS_Android" />
+        </label>
+    </p>
+
+    <p>
+        <strong>60Hz Display gewünscht?</strong>
+        <label>
+            <input type="checkbox" id="Display_60Hz" />
+        </label>
+    </p>
+
+    <p>
+        <strong>Oder doch lieber 120Hz für den nächsten Serienmarathon?</strong>
+        <label>
+            <input type="checkbox" id="Display_120Hz" />
+        </label>
+    </p>
+
+    <p>
+        <strong>Batterie</strong>
+        <label>
+            <select id="Battery_mAh">
+                <option value="1000">1000</option>
+                <option value="1100">1100</option>
+                <option value="1200">1200</option>
+                <option value="2500">2500</option>
+                <option value="2800">2800</option>
+                <option value="4000">4000</option>
+                <option value="4500">4500</option>
+                <option value="5000">5000</option>
+                <option value="5100">5100</option>
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <strong>RAM</strong>
+        <label>
+            <select id="RAM_GB">
+                <option value="8">8</option>
+                <option value="16">16</option>
+                <option value="32">32</option>
+                <option value="64">64</option>
+                <option value="128">128</option>
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <strong>GHz</strong>
+        <label>
+            <select id="GHz">
+                <option value="1.77">1.77</option>
+                <option value="2.2">2.2</option>
+                <option value="2.4">2.4</option>
+                <option value="2.8">2.8</option>
+                <option value="100">100</option>
+                <option value="208">208</option>
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <strong>5G für schnelleres Internet gewünscht?</strong>
+        <label>
+            <input type="checkbox" id="Has_5G" />
+        </label>
+    </p>
+
+    <p>
+        <strong>Oft auf Reisen? Ein Smartphone mit Dual Sim kann helfen.</strong>
+        <label>
+            <input type="checkbox" id="Dual_Sim" />
+        </label>
+    </p>
+
+
+
+    <button id="predictBtn">Preisprognose anschauen</button>
+
+    <p id="prediction">Preis für ein Smartphone mit den angegebenen Spezifikationen: n.a.</p>
+
+    <script>
+        document.getElementById('predictBtn').addEventListener('click', async () => {
+            // Sammle die Werte von den Eingabeelementen
+            const OS_Android = document.getElementById('OS_Android').checked;
+            const Display_60Hz = document.getElementById('Display_60Hz').checked;
+            const Display_120Hz = document.getElementById('Display_120Hz').checked;
+            const Battery_mAh = document.getElementById('Battery_mAh').value;
+            const RAM_GB = document.getElementById('RAM_GB').value;
+            const GHz = document.getElementById('GHz').value;
+            const Has_5G = document.getElementById('Has_5G').checked;
+            const Dual_Sim = document.getElementById('Dual_Sim').checked;
+
 			
-			<script>
-				{
-					__sveltekit_1jpd85b = {
-						base: new URL(".", location).pathname.slice(0, -1)
-					};
 
-					const element = document.currentScript.parentElement;
+            // Hier würdest du deinen Fetch-Request einfügen
+            const response = await fetch(`${url}/api/predict?` + new URLSearchParams({
+				OS_Android,
+				Display_60Hz,
+				Display_120Hz,
+				Battery_mAh,
+				RAM_GB,
+				GHz,
+				Has_5G,
+				Dual_Sim,
+				// price, // Sollte entfernt werden, falls es nicht als Parameter gedacht ist
+			}), { method: "GET" });
 
-					const data = [null,null];
+			const data = await response.json();
 
-					Promise.all([
-						import("./_app/immutable/entry/start.MhuHwd1o.js"),
-						import("./_app/immutable/entry/app.LdwEzxIk.js")
-					]).then(([kit, app]) => {
-						kit.start(app, element, {
-							node_ids: [0, 2],
-							data,
-							form: null,
-							error: null
-						});
-					});
-				}
-			</script>
-		</div>
-	</body>
+            // Setze eine simulierte Vorhersageantwort
+            document.getElementById('prediction').textContent = `Preis für ein Smartphone mit den angegebenen Spezifikationen: ${data.predicted_price}`;
+        });
+
+        // Synchronisiere den Slider und das Nummernfeld
+        const priceInput = document.getElementById('price');
+        const priceNumInput = document.getElementById('priceNum');
+        priceInput.addEventListener('input', () => {
+            priceNumInput.value = priceInput.value;
+        });
+        priceNumInput.addEventListener('input', () => {
+            priceInput.value = priceNumInput.value;
+        });
+    </script>
+</body>
 </html>
