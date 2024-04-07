@@ -1,6 +1,7 @@
 # new terminal
 # cd spider/downloads
-# python mongo_import.py -u 'mongodb+srv://mongodb:HelloWorld2929@mdm-cluster-1.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000' -i '/Users/morenogallo/Desktop/ZHAW/6_Semester/MDM/MDM_Projekt1_Moreno_Gallo/spider/spider/spiders/produkte.json' -d 'produkte' -c 'produkte'
+# python mongo_import.py -u 'mongodb+srv://mongodb:HelloWorld2929@mdm-cluster-1.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000' 
+# -i '/Users/morenogallo/Desktop/ZHAW/6_Semester/MDM/MDM_Projekt1_Moreno_Gallo/spider/spider/spiders/produkte.json' -d 'produkte' -c 'produkte'
 
 
 import argparse

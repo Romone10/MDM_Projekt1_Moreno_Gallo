@@ -1,4 +1,4 @@
-name: Scrape Data, build and upload Model
+name: Scrape Smartphone Data, Build the Model and upload it
 
 on:
   push:
@@ -10,27 +10,27 @@ jobs:
     steps:
 
       - name: checkout repo content
-        uses: actions/checkout@v3 # checkout the repository content to github runner
+        uses: actions/checkout@v4.1.1
 
       - name: setup python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12.1' # install the python version needed
+          python-version: '3.10.11'
           cache: 'pip'
           
       - name: install python packages
         run: pip install -r requirements.txt
           
-      - name: scrape hikr data 
-        working-directory: ./spider
-        run: scrapy crawl gpx -s CLOSESPIDER_PAGECOUNT=50 -o file.jl
+      - name: scrape Smartphone data
+        working-directory: ./spider/spider/spiders
+        run: python getSmartphoneData.py
 
-      - name: upload data to mongodb
+      - name: upload data to mongodb 
         working-directory: spider/downloads
-        run: python ./mongo_import.py -c tracks -i ../file.jl -u "${{secrets.MONGODB_URI}}"
+        run: python ./mongo_import.py -u "${{secrets.MONGODB_URI}}" -i '/Users/morenogallo/Desktop/ZHAW/6_Semester/MDM/MDM_Projekt1_Moreno_Gallo/spider/spider/spiders/produkte.json' -d 'produkte' -c 'produkte'
 
       - name: build model
-        working-directory: model
+        working-directory: model 
         run: python ./model.py -u "${{secrets.MONGODB_URI}}"
 
       - name: upload model
