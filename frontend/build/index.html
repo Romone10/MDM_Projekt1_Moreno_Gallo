@@ -1,30 +1,71 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <link rel="icon" href="./favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Smartphone Analyse</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form,
+        p {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="checkbox"],
+        select {
+            margin-right: 10px;
+        }
+    </style>
+
 </head>
+
 <body>
     <h1>Smartphone Analyse</h1>
 
     <p>
-        <strong>Betriebssystem von Android gewünscht?</strong>
+        <strong>Android Betriebssystem</strong>
         <label>
             <input type="checkbox" id="OS_Android" />
         </label>
     </p>
 
     <p>
-        <strong>60Hz Display gewünscht?</strong>
+        <strong>60Hz Display</strong>
         <label>
             <input type="checkbox" id="Display_60Hz" />
         </label>
     </p>
 
     <p>
-        <strong>Oder doch lieber 120Hz für den nächsten Serienmarathon?</strong>
+        <strong>120Hz Display</strong>
         <label>
             <input type="checkbox" id="Display_120Hz" />
         </label>
@@ -75,14 +116,14 @@
     </p>
 
     <p>
-        <strong>5G für schnelleres Internet gewünscht?</strong>
+        <strong>5G</strong>
         <label>
             <input type="checkbox" id="Has_5G" />
         </label>
     </p>
 
     <p>
-        <strong>Oft auf Reisen? Ein Smartphone mit Dual Sim kann helfen.</strong>
+        <strong>Dual Sim</strong>
         <label>
             <input type="checkbox" id="Dual_Sim" />
         </label>
@@ -92,7 +133,8 @@
 
     <button id="predictBtn">Preisprognose anschauen</button>
 
-    <p id="prediction">Preis für ein Smartphone mit den angegebenen Spezifikationen: <span id="predicted_price">n.a.</span></p>
+    <p id="prediction">Preis für ein Smartphone mit den angegebenen Spezifikationen: <span
+            id="predicted_price">n.a.</span></p>
 
     <script>
         __sveltekit_1jpd85b = {
@@ -110,14 +152,14 @@
             let Dual_Sim = document.getElementById('Dual_Sim').checked;
             let predicted_price = 0;
 
-			
+
 
             // Hier würdest du deinen Fetch-Request einfügen
 
-            const response = await fetch(`/api/predict`,{
-                method:"POST",
+            const response = await fetch(`/api/predict`, {
+                method: "POST",
                 headers: {
-                    "Content-Type":"application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     OS_Android,
@@ -131,13 +173,14 @@
                 })
             });
 
-			const data = await response.json();
+            const data = await response.json();
 
             // Setze eine simulierte Vorhersageantwort
             document.getElementById('predicted_price').innerText = data.price;
         });
 
-        
+
     </script>
 </body>
+
 </html>

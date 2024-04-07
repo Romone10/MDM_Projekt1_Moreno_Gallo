@@ -30,26 +30,74 @@
         const data = await response.json();
         predictedPrice = data.price;
     }
+
+    let modelResults = {
+        df_shape: "",
+        df_info: "",
+        price_description: {},
+        features_table: [],
+        model_results: [],
+    };
+
+    async function getModelResults() {
+        const res = await fetch("/api/model-results");
+        const data = await res.json();
+        modelResults = data;
+    }
+
+    getModelResults();
 </script>
+
+<style>
+    h1 {
+        color: #333;
+    }
+    form, p {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    input[type="checkbox"], select {
+        margin-right: 10px;
+    }
+</style>
+
+
+
+
+
 
 <h1>Smartphone Analyse</h1>
 
 <p>
-    <strong>Betriebssystem von Android gewünscht? [m]</strong>
+    <strong>Android Betriebssystem [m]</strong>
     <label>
         <input type="checkbox" bind:checked={OS_Android} />
     </label>
 </p>
 
 <p>
-    <strong>60Hz Display gewünscht? [m]</strong>
+    <strong>60Hz Display [m]</strong>
     <label>
         <input type="checkbox" bind:checked={Display_60Hz} />
     </label>
 </p>
 
 <p>
-    <strong>Oder doch lieber 120Hz für den nächsten Serienmarathon? [m]</strong>
+    <strong>120Hz Display [m]</strong>
     <label>
         <input type="checkbox" bind:checked={Display_120Hz} />
     </label>
@@ -100,32 +148,59 @@
 </p>
 
 <p>
-    <strong>5G für schnelleres Internet gewünscht? [m]</strong>
+    <strong>5G [m]</strong>
     <label>
         <input type="checkbox" bind:checked={Has_5G} />
     </label>
 </p>
 
 <p>
-    <strong>Oft auf Reisen? Ein Smartphone mit Dual Sim kann helfen. [m]</strong
-    >
+    <strong>Dual Sim [m]</strong>
     <label>
         <input type="checkbox" bind:checked={Dual_Sim} />
     </label>
 </p>
 
-<!-- 
-<p>
-    <strong>Was schätzt du, wie viel ein Smartphone mit den von dir gewählten Spezifikationen kostet? [m]</strong>
-    <label>
-        <input type="range" bind:value={price} min="0" max="3000" />
-        <input type="number" bind:value={price} min="0" max="3000" />
-    </label>
-</p>
--->
-
 <button on:click={predict}>Preisprognose</button>
 
 <p>
-    Preis für ein Smartphone mit den angegebenen Spezifikationen: {predictedPrice}
+    Preis für ein Smartphone mit den angegebenen Spezifikationen: ${predictedPrice.toFixed(
+        2,
+    )}
 </p>
+
+<pre>Dataset Shape: {modelResults.df_shape}</pre>
+<pre>Price Description: {JSON.stringify(
+        modelResults.price_description,
+        null,
+        2,
+    )}</pre>
+
+<style>
+    h1 {
+        color: #333;
+    }
+    form,
+    p {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    input[type="checkbox"],
+    select {
+        margin-right: 10px;
+    }
+</style>

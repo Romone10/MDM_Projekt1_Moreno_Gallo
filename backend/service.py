@@ -72,6 +72,8 @@ app = Flask(__name__)
 cors = CORS(app)
 app = Flask(__name__, static_url_path='/', static_folder='../frontend/build')
 
+RESULTS_PATH = '/Users/morenogallo/Desktop/ZHAW/6_Semester/MDM/MDM_Projekt1_Moreno_Gallo/model/model_results.json'
+
 @app.route("/")
 def indexPage():
      return send_file("../frontend/build/index.html")  
@@ -90,6 +92,13 @@ def predict():
     input_data = [[OS_Android, Display_60Hz, Display_120Hz, Battery_mAh, RAM_GB, GHz, Has_5G, Dual_Sim]]
     prediction = model.predict(input_data)[0]     
     
+  
+    
     return jsonify({'price': str(prediction)}) 
 if __name__ == "__main__":     
     app.run(debug=True)
+
+
+
+
+

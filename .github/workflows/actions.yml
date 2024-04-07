@@ -8,7 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
       - name: checkout repo content
         uses: actions/checkout@v4.1.1
 
@@ -20,19 +19,36 @@ jobs:
           
       - name: install python packages
         run: pip install -r requirements.txt
-          
+
+      - name: Set execute permission for getSmartphoneData.py
+        run: chmod +x ./spider/spider/spiders/getSmartphoneData.py
+        
       - name: scrape Smartphone data
         working-directory: ./spider/spider/spiders
-        run: python getSmartphoneData.py
+        run: ./getSmartphoneData.py
+
+      - name: Set execute permission for mongo_import.py
+        run: chmod +x ./spider/downloads/mongo_import.py
 
       - name: upload data to mongodb 
-        working-directory: spider/downloads
-        run: python ./mongo_import.py -u "${{secrets.MONGODB_URI}}" -i '/Users/morenogallo/Desktop/ZHAW/6_Semester/MDM/MDM_Projekt1_Moreno_Gallo/spider/spider/spiders/produkte.json' -d 'produkte' -c 'produkte'
+        working-directory: ./spider/downloads
+        run: |
+          ./mongo_import.py -u "${{secrets.MONGODB_URI}}" \
+                            -i './spider/spider/spiders/produkte.json' \
+                            -d 'produkte' -c 'produkte'
+
+      - name: Set execute permission for model.py
+        run: chmod +x ./model/model.py
 
       - name: build model
-        working-directory: model 
-        run: python ./model.py -u "${{secrets.MONGODB_URI}}"
+        working-directory: ./model 
+        run: |
+          ./model.py -u "${{secrets.MONGODB_URI}}"
+
+      - name: Set execute permission for save.py
+        run: chmod +x ./model/save.py
 
       - name: upload model
-        working-directory: model
-        run: python ./save.py -c "${{secrets.AZURE_STORAGE_CONNECTION_STRING}}"
+        working-directory: ./model
+        run: |
+          ./save.py -c "${{secrets.AZURE_STORAGE_CONNECTION_STRING}}"

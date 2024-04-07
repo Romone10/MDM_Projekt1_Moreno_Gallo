@@ -17,6 +17,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.impute import SimpleImputer
 import seaborn as sns
+import json
 
 parser = argparse.ArgumentParser(description='Create Model')
 parser.add_argument('-u', '--uri', required=True, help="mongodb uri with username/password")
@@ -200,6 +201,9 @@ plt.show()
 
 df.to_json('/Users/morenogallo/Desktop/ZHAW/6_Semester/MDM/MDM_Projekt1_Moreno_Gallo/model/newPhoneDF.json', orient='records', lines=True )
 
+
+
+
 # DEMO
 Dual_Sim = False
 Has_5G = False
@@ -231,6 +235,8 @@ with open('GradientBoostingRegressor.pkl', 'wb') as fid:
 # load it again
 with open('GradientBoostingRegressor.pkl', 'rb') as fid:
     gbr_loaded = pickle.load(fid)
+
+
 
 
 
