@@ -1,4 +1,4 @@
-# HikePlanner
+# SmartphoneAnalyse
 
 inspired by https://blog.mimacom.com/data-collection-scrapy-hiketime-prediction/
 similar dataset https://www.kaggle.com/datasets/roccoli/gpx-hike-tracks
@@ -6,7 +6,7 @@ similar dataset https://www.kaggle.com/datasets/roccoli/gpx-hike-tracks
 ## Spider
 
 * Scrape regularly for new / additional data
-* Output file.jl (json list)
+* Output produkte.jl (json list)
 * Load data into MongoDB
 * Update model
     * Produce correlation heatmap
@@ -42,5 +42,5 @@ similar dataset https://www.kaggle.com/datasets/roccoli/gpx-hike-tracks
 ## Ideas
 
 * Personalized Model
-    * For a specific Hikr user
+    * For a Smartphone Price with self chosen specifications
     * z.B. 100 weitere "neue" Daten eines bestimmten Benutzers 
